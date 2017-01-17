@@ -7,9 +7,10 @@
 //
 
 #import "AppDelegate.h"
+#import "GCDWebDAVServer.h"
 
 @interface AppDelegate ()
-
+@property (nonatomic, strong) GCDWebDAVServer* davServer;
 @end
 
 @implementation AppDelegate
@@ -17,6 +18,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    _davServer = [[GCDWebDAVServer alloc] initWithUploadDirectory:documentsPath];
+    //置顶端口，在真机上，默认端口可能会被占用，如果无法播放，换下端口试试
+    [_davServer startWithPort:9998 bonjourName:@"MyBonjour"];
+    NSLog(@"serverURL：%@", _davServer.serverURL);
     return YES;
 }
 
